@@ -3,7 +3,6 @@ package com.pisiitech.yemekleruygulamasi
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
-import android.widget.Space
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -31,6 +30,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -44,6 +44,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -51,8 +52,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.google.gson.Gson
-import com.pisiitech.yemekleruygulamasi.ui.theme.DetaySayfa
+import com.pisiitech.yemekleruygulamasi.entity.Yemekler
 import com.pisiitech.yemekleruygulamasi.ui.theme.YemeklerUygulamasiTheme
+import com.pisiitech.yemekleruygulamasi.viewmodel.AnasayfaViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,7 +84,7 @@ fun SayfaGecisleri() {
             navArgument("yemek"){type = NavType.StringType}
         )) {
             val json = it.arguments?.getString("yemek") //String olarak aldik
-            val yemek = Gson().fromJson(json,Yemekler::class.java) //donusturdum ve artik elimde nesne var
+            val yemek = Gson().fromJson(json, Yemekler::class.java) //donusturdum ve artik elimde nesne var
             DetaySayfa(yemek = yemek) //DetaySayfa'sina yemek nesnesini gonderdik
         }
     }
@@ -92,23 +94,8 @@ fun SayfaGecisleri() {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun Anasayfa(navController: NavController) {
-    val yemekListesi = remember { mutableStateListOf<Yemekler>() }
-
-    LaunchedEffect(key1 = true) { //bu metot sayfa acildigi anda calisan bir metot
-        val y1 = Yemekler(1,"Köfte","kofte",15)
-        val y2 = Yemekler(2,"Ayran","ayran",2)
-        val y3 = Yemekler(3,"Fanta","fanta",3)
-        val y4 = Yemekler(4,"Makarna","makarna",14)
-        val y5 = Yemekler(5,"Kadayıf","kadayif",8)
-        val y6 = Yemekler(6,"Baklava","baklava",15)
-
-        yemekListesi.add(y1)
-        yemekListesi.add(y2)
-        yemekListesi.add(y3)
-        yemekListesi.add(y4)
-        yemekListesi.add(y5)
-        yemekListesi.add(y6)
-    }
+    val viewModel:AnasayfaViewModel = viewModel()
+    val yemekListesi = viewModel.yemeklerListesi.observeAsState(listOf())
 
     Scaffold(
         topBar = {
@@ -125,9 +112,9 @@ fun Anasayfa(navController: NavController) {
                 modifier = Modifier.consumedWindowInsets(innerPadding),
                 contentPadding = innerPadding) {
                 items(
-                    count = yemekListesi.count(),
+                    count = yemekListesi.value!!.count(),
                     itemContent = {
-                        val yemek = yemekListesi[it]
+                        val yemek = yemekListesi.value!![it]
 
                         Card(modifier = Modifier
                             .padding(all = 5.dp)

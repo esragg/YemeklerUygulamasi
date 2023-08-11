@@ -1,4 +1,4 @@
-package com.pisiitech.yemekleruygulamasi.ui.theme
+package com.pisiitech.yemekleruygulamasi
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -23,12 +23,9 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.pisiitech.yemekleruygulamasi.Anasayfa
-import com.pisiitech.yemekleruygulamasi.R
-import com.pisiitech.yemekleruygulamasi.Yemekler
+import com.pisiitech.yemekleruygulamasi.entity.Yemekler
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)

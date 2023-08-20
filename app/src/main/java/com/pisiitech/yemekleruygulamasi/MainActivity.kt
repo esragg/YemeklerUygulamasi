@@ -2,6 +2,7 @@ package com.pisiitech.yemekleruygulamasi
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -55,6 +56,7 @@ import com.google.gson.Gson
 import com.pisiitech.yemekleruygulamasi.entity.Yemekler
 import com.pisiitech.yemekleruygulamasi.ui.theme.YemeklerUygulamasiTheme
 import com.pisiitech.yemekleruygulamasi.viewmodel.AnasayfaViewModel
+import com.pisiitech.yemekleruygulamasi.viewmodel.AnasayfaViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,7 +96,10 @@ fun SayfaGecisleri() {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun Anasayfa(navController: NavController) {
-    val viewModel:AnasayfaViewModel = viewModel()
+    val context = LocalContext.current
+    val viewModel:AnasayfaViewModel = viewModel(
+        factory = AnasayfaViewModelFactory(context.applicationContext as Application)
+    )
     val yemekListesi = viewModel.yemeklerListesi.observeAsState(listOf())
 
     Scaffold(
